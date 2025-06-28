@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  backend:
+    volumes:
+      # Mount the backend source code for hot-reloading with uvicorn
+      - ./backend/app:/app/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev # Use a specific Dockerfile for development
+    volumes:
+      # Mount the entire frontend directory to enable Vite's HMR
+      - ./frontend:/app
+      - /app/node_modules # Use an anonymous volume to prevent local node_modules from overwriting the container's
+    command: npm run dev # Run the dev server instead of NGINX
