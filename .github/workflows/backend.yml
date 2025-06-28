@@ -1,0 +1,43 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-tools
+          pip-compile backend/requirements-dev.in -o backend/requirements-dev.txt
+          pip install -r backend/requirements-dev.txt
+
+      - name: Run linter and formatter check
+        run: |
+          ruff check backend/
+          black --check backend/
+
+      - name: Run tests
+        # Note: We create a dummy .env file as the app expects it,
+        # but the test environment should use default or mocked values.
+        run: |
+          touch backend/.env
+          pytest backend/
