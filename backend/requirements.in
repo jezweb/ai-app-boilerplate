@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+lancedb
+sentence-transformers
+python-dotenv
+clerk-python
+boto3
