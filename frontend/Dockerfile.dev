@@ -1,0 +1,13 @@
+# Use the official Node.js image
+FROM node:18-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and install dependencies
+# This layer is cached unless package.json changes
+COPY package*.json ./
+RUN npm install
+
+# The rest of the source code will be mounted via a volume
+# The dev server will be started by the command in docker-compose.override.yml
